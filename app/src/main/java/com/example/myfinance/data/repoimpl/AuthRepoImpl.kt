@@ -32,6 +32,19 @@ class AuthRepositoryImpl @Inject constructor(
         return dao.getUser()?.id ?: error("Пользователь не найден")
     }
 
-    private fun User.toEntity() = UserEntity(id, email, password)
-    private fun UserEntity.toDomain() = User(id, email, password)
+    private fun User.toEntity() = UserEntity(id, email, password,name)
+    private fun UserEntity.toDomain() = User(id, email, password, name)
+
+    override suspend fun updateUser(user: User): Result<Unit> {
+        return try {
+            dao.updateUser(user.toEntity())
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+    override suspend fun logout() {
+        dao.clearCurrentUser()
+    }
+
 }

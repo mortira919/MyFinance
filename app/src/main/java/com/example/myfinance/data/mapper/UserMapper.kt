@@ -8,13 +8,15 @@ class UserMapper {
     fun UserEntity.toDomain(): User = User(
         id = id,
         email = email,
-        password = password
+        password = password,
+        name = name
     )
 
     fun User.toEntity(): UserEntity = UserEntity(
         id = id,
         email = email,
-        password = password
+        password = password,
+        name = name
     )
 
 }
