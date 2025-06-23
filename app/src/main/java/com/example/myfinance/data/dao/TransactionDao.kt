@@ -17,10 +17,10 @@ interface TransactionDao {
     suspend fun getTransactionsForPeriod(userId: Int, start: LocalDate, end: LocalDate): List<TransactionEntity>
 
     @Query("SELECT SUM(amount) FROM transactions WHERE userId = :userId AND type = 'INCOME'")
-    suspend fun getTotalIncome(userId: Int): Long?
+    suspend fun getTotalIncome(userId: Int): Double?
 
     @Query("SELECT SUM(amount) FROM transactions WHERE userId = :userId AND type = 'EXPENSE'")
-    suspend fun getTotalExpense(userId: Int): Long?
+    suspend fun getTotalExpense(userId: Int): Double?
 
     @Insert
     suspend fun insertTransaction(transaction: TransactionEntity)
