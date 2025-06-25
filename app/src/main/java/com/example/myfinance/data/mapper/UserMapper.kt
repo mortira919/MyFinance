@@ -4,7 +4,7 @@ import com.example.myfinance.data.auth.entity.UserEntity
 import com.example.myfinance.domain.model.auth.User
 
 class UserMapper {
-    // data/mapper/UserMapper.kt
+
     fun UserEntity.toDomain(): User = User(
         id = id,
         email = email,
@@ -18,5 +18,6 @@ class UserMapper {
         password = password,
         name = name
     )
+
 
 }

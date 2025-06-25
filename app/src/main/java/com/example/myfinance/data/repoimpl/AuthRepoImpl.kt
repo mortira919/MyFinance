@@ -7,7 +7,9 @@ import com.example.myfinance.data.dao.AuthDao
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
-    private val dao: AuthDao
+    private val dao: AuthDao,
+    private val api: AuthApiService,
+    private val localDataSource: UserLocalDataSource
 ) : AuthRepository {
 
     override suspend fun register(user: User): Result<Unit> {
@@ -44,7 +46,22 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
     override suspend fun logout() {
-        dao.clearCurrentUser()
+        dao.clearUsers()
+    }
+
+    override suspend fun signInWithGoogle(idToken: String): Result<Unit> {
+        return try {
+            val response = api.signInWithGoogle(idToken) // Можешь заменить на мок/локальную логику
+            if (response.isSuccessful && response.body() != null) {
+                val userDto = response.body()!!
+                localDataSource.saveUser(userDto.toEntity()) // Сохраняем в Room/DataStore
+                Result.success(Unit)
+            } else {
+                Result.failure(Exception("Google Sign-In failed: ${response.code()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
 }
